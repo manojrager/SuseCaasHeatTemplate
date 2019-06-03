@@ -278,10 +278,8 @@ resources:
 
             ntp:
               enabled: true
-              servers:
-                - 0.pl.pool.ntp.org
-                - 1.pl.pool.ntp.org
-              #  - ntp3.example.com
+              #servers:
+              # - ntp3.example.com
             runcmd:
               - /usr/bin/systemctl enable ntpd
               - /usr/bin/systemctl start ntpd
@@ -376,9 +374,9 @@ resources:
 
             ntp:
               enabled: true
-              servers:
-                - 0.pl.pool.ntp.org
-                - 1.pl.pool.ntp.org
+              #servers:
+              #- 0.pl.pool.ntp.org
+              #- 1.pl.pool.ntp.org
               #  - ntp3.example.com
             runcmd:
               - /usr/bin/systemctl enable ntpd
@@ -452,9 +450,9 @@ resources:
 
                 ntp:
                   enabled: true
-                  servers:
-                    - 0.pl.pool.ntp.org
-                    - 1.pl.pool.ntp.org
+                  #servers:
+                  #  - 0.pl.pool.ntp.org
+                  #  - 1.pl.pool.ntp.org
                   #  - ntp3.example.com
                 runcmd:
                   - /usr/bin/systemctl enable ntpd
