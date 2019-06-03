@@ -287,6 +287,9 @@ resources:
               - /usr/bin/systemctl start ntpd
               - mkdir /etc/caasp/cpi
               - chmod -R 0755 /etc/caasp/cpi
+              - SUSEConnect -r E1B72CC27120D0 -e marco@cloudibility.io
+              - transactional-update up
+              - reboot
 
             write_files:
               - path: /etc/caasp/cpi/openstack.conf
@@ -303,10 +306,6 @@ resources:
                   monitor-max-retries=$cpi_monitor_max_retries
                   bs-version=$cpi_bs_version
                   ignore-volume-az=$cpi_ignore_volume_az
-            runcmd:
-              - SUSEConnect -r E1B72CC27120D0 -e marco@cloudibility.io
-              - transactional-update up
-              - reboot
 
           params:
             $root_password: { get_param: root_password }
