@@ -47,15 +47,15 @@ parameters:
     type: string
     description: >
       Name or ID of public network for which floating IP addresses will be allocated
-    default: 0a2228f2-7f8a-45f1-8e09-9039e1d09975
+    default: floating
   internal_net_cidr:
     type: string
     description: Private network range which servers get deployed. Make sure this doesn't conflict with the any IP addresses CaaSP uses (e.g. the dns_cluster_ip).
-    default: 192.168.0.0/24
+    default: 172.28.0.0/24
   dns_nameserver:
     type: string
     description: Address of a dns nameserver reachable.
-    default: 100.125.4.25
+    default: 172.28.0.2
   admin_flavor:
     type: string
     description: Admin Flavor
@@ -86,27 +86,26 @@ parameters:
   cpi_auth_url:
     type: string
     description: Cloud Provider Interface - Keystone API URL
-    default: https://iam.eu-de.otc.t-systems.com/v3
+    default: https://api.keystone.example.net:5000/v3
   cpi_domain_name:
     type: string
     description: Cloud Provider Interface - Keystone domain name
-    default: OTC-EU-DE-00000000001000033587
+    default: Default
   cpi_tenant_name:
     type: string
     description: Cloud Provider Interface - Keystone project name
-    default: eu-de
+    default: admin
   cpi_region:
     type: string
     description: Cloud Provider Interface - Keystone region
-    default: eu-de-01
+    default: RegionOne
   cpi_username:
     type: string
     description: Cloud Provider Interface - Keystone username
-    default: manoj
+    default: admin
   cpi_password:
     type: string
     description: Cloud Provider Interface - Keystone user password
-    default: hprmaregar@11
   cpi_monitor_max_retries:
     type: number
     description: Cloud Provider Interface - Neutron Load balancer monitoring max retries
@@ -253,7 +252,7 @@ resources:
     depends_on:
       - external_router_int
     properties:
-      name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'admin.az-manoj.pl']] }
+      name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'admin']] }
       image: { get_param: image }
       key_name: { get_resource: keypair }
       flavor: { get_param: admin_flavor }
@@ -288,9 +287,6 @@ resources:
               - /usr/bin/systemctl start ntpd
               - mkdir /etc/caasp/cpi
               - chmod -R 0755 /etc/caasp/cpi
-              - SUSEConnect -r E1B72CC27120D0 -e marco@cloudibility.io
-              - transactional-update up
-              - reboot
 
             write_files:
               - path: /etc/caasp/cpi/openstack.conf
@@ -311,6 +307,7 @@ resources:
               - SUSEConnect -r E1B72CC27120D0 -e marco@cloudibility.io
               - transactional-update up
               - reboot
+
           params:
             $root_password: { get_param: root_password }
             $cpi_auth_url: { get_param: cpi_auth_url }
@@ -353,7 +350,7 @@ resources:
     depends_on:
       - external_router_int
     properties:
-      name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'master.az-manoj.pl']] }
+      name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'master']] }
       image: { get_param: image }
       key_name: { get_resource: keypair }
       flavor: { get_param: master_flavor }
@@ -426,7 +423,7 @@ resources:
       resource_def:
         type: OS::Nova::Server
         properties:
-          name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'worker', '%index%.az-manoj.pl']] }
+          name: { list_join: ['-', [{get_param: 'OS::stack_name'}, 'worker', '%index%']] }
           image: { get_param: image }
           key_name: { get_resource: keypair }
           flavor: { get_param: worker_flavor }
